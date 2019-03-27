@@ -1,8 +1,11 @@
 import arcade
-from models import Player, World, Stage
+from models import World, Stage
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 BLOCK_SIZE = 40
+PLAYER_SIZE_X = 40
+PLAYER_SIZE_Y = 80
+
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
@@ -41,7 +44,10 @@ class GunnerWindow(arcade.Window):
         self.stage_drawer.draw()
 
     def on_key_press(self, key, key_modifiers):
-         self.world.on_key_press(key, key_modifiers)
+        self.world.on_key_press(key, key_modifiers)
+
+    def on_key_release(self, key, key_modifiers):
+        self.world.on_key_release(key, key_modifiers)
  
  
     
@@ -55,6 +61,7 @@ class StageDrawer():
         self.block_sprite = arcade.Sprite('images/Block.png')
         
     def get_sprite_position(self, row, column):
+        # find x,y from column,row
         # row = 0-19 column = 0-14
         x = ((column + 1) * BLOCK_SIZE) - BLOCK_SIZE//2
         y = (SCREEN_HEIGHT - ((row + 1) * BLOCK_SIZE)) + BLOCK_SIZE//2
@@ -71,6 +78,7 @@ class StageDrawer():
             for column in range(self.width):
                 if self.stage.has_block(row, column):
                     self.draw_sprite(self.block_sprite, row, column)
+                    
 
                                         
 
