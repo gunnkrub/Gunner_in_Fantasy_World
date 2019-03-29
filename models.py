@@ -57,12 +57,28 @@ class Bullet:
         self.world = world
         self.player = self.world.player
         self.x = self.player.x + (self.player.block_size / 2)
-        self.y = self.player.y + 3
+        self.y = self.player.y
         self.vx = 5
+        self.bullet_width = 6
+        self.bullet_height = 3
 
-
+    def bullet_hit_block(self):
+        for block_x, block_y in self.world.stage.block_list:
+            if block_x - (self.world.block_size / 2) <= self.x + (self.bullet_width / 2) <= block_x + (self.world.block_size / 2):
+                if block_y - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= block_y + (self.world.block_size / 2) or block_y - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= block_y + (self.world.block_size / 2):
+                   return True                
+        return False
+    def delete(self):
+        self.world.bullet.remove(self)
     def update(self, delta):
         self.x += self.vx
+        if self.x > self.world.width + (self.bullet_width / 2):
+            self.delete()
+
+        
+##class Slime:
+    
+            
 
 
     
@@ -110,10 +126,10 @@ class Stage:
                     '....................',
                     '....................',
                     '....................',
-                    '....................',
+                    '..................0.',
                     '...............####.',
                     '....................',
-                    '....................',
+                    '...0................',
                     '..#######...........',
                     '..............####..',
                     '....................',
@@ -124,8 +140,9 @@ class Stage:
         self.height = len(self.map)
         self.width = len(self.map[0])
         self.block_list = []
+        self.slime_list = []
         self.write_block_list()
-        
+        self.write_slime_list()
 
     def get_sprite_position(self, row, column):
         """ find x,y from column,row
@@ -140,10 +157,18 @@ class Stage:
                 if self.has_block(row, column):
                     self.block_list.append(self.get_sprite_position(row, column))
 
+    def write_slime_list(self):    
+        for row in range(self.height):
+            for column in range(self.width):
+                if self.has_slime(row, column):
+                    self.slime_list.append(self.get_sprite_position(row, column))
+
     def has_block(self, row, column):
         return self.map[row][column] == '#'
     def has_blank(self, row, column):
         return self.map[row][column] == '.'
+    def has_slime(self, row, column):
+        return self.map[row][column] == '0'
 
     
 
