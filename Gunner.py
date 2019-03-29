@@ -71,6 +71,7 @@ class StageDrawer():
         self.height = self.stage.height
 
         self.block_sprite = arcade.Sprite('images/Block.png')
+        self.slime_sprite = arcade.Sprite('images/Slime.png')
         
     def get_sprite_position(self, row, column):
         # find x,y from column,row
@@ -90,6 +91,8 @@ class StageDrawer():
             for column in range(self.width):
                 if self.stage.has_block(row, column):
                     self.draw_sprite(self.block_sprite, row, column)
+                if self.stage.has_slime(row, column):
+                    self.draw_sprite(self.slime_sprite, row, column)
                     
 
                                         
