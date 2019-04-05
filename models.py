@@ -60,7 +60,7 @@ class Bullet:
         self.world = world
         self.player = self.world.player
         self.x = self.player.x + (self.player.block_size / 2)
-        self.y = self.player.y
+        self.y = self.player.y - 2
         self.vx = 5
         self.bullet_width = 6
         self.bullet_height = 3
@@ -73,10 +73,11 @@ class Bullet:
         return False
 
     def bullet_hit_slime(self):
-        for slime in self.world.slime_list:
-            if slime[0] - (self.world.block_size / 2) <= self.x + (self.bullet_width / 2) <= slime[0] + (self.world.block_size / 2):
-                if slime[1] - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= slime[1] + (self.world.block_size / 2) or slime[1] - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= slime[1] + (self.world.block_size / 2):
-                   return True                
+        for slime in self.world.slime:
+            if slime.x - (self.world.block_size / 2) <= self.x + (self.bullet_width / 2) <= slime.x + (self.world.block_size / 2):
+                if slime.y - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= slime.y + (self.world.block_size / 2) or slime.y - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= slime.y + (self.world.block_size / 2):
+                   self.world.slime.remove(slime)
+                   return True
         return False
     
     def delete(self):
@@ -128,9 +129,9 @@ class Slime:
                     self.vx = -self.vx
     def get_position(self):
         return self.x, self.y
-
+##
 ##    def hit_bullet(self):
-        
+##        
 
     def update(self, delta):
         self.x += self.vx
