@@ -29,6 +29,16 @@ class BulletSprite:
         for bullet in bullet_list:
             self.sprite.set_position(bullet.x,bullet.y)
             self.sprite.draw()
+
+class SlimeSprite():
+    def __init__(self):
+        self.sprite = arcade.Sprite('images/Slime.png')
+
+    def draw(self, slime_list):
+        for slime in slime_list:
+            self.sprite.set_position(slime.x, slime.y)
+            self.sprite.draw()
+        
             
 class GunnerWindow(arcade.Window):
     def __init__(self, width, height):
@@ -40,6 +50,7 @@ class GunnerWindow(arcade.Window):
 
         self.player_sprite = ModelSprite('images/Gunner.png', model=self.world.player)
         self.bullet_sprite = BulletSprite()
+        self.slime_sprite = SlimeSprite()
 
         self.stage_drawer = StageDrawer(self.world.stage)
 
@@ -51,6 +62,8 @@ class GunnerWindow(arcade.Window):
         arcade.start_render()
 
         self.player_sprite.draw()
+        
+        self.slime_sprite.draw(self.world.slime)
         self.bullet_sprite.draw(self.world.bullet)
 
         self.stage_drawer.draw()
@@ -61,8 +74,7 @@ class GunnerWindow(arcade.Window):
     def on_key_release(self, key, key_modifiers):
         self.world.on_key_release(key, key_modifiers)
  
- 
-    
+
 
 class StageDrawer():
     def __init__(self, stage):
@@ -71,7 +83,7 @@ class StageDrawer():
         self.height = self.stage.height
 
         self.block_sprite = arcade.Sprite('images/Block.png')
-        self.slime_sprite = arcade.Sprite('images/Slime.png')
+        
         
     def get_sprite_position(self, row, column):
         # find x,y from column,row
@@ -91,8 +103,7 @@ class StageDrawer():
             for column in range(self.width):
                 if self.stage.has_block(row, column):
                     self.draw_sprite(self.block_sprite, row, column)
-                if self.stage.has_slime(row, column):
-                    self.draw_sprite(self.slime_sprite, row, column)
+
                     
 
                                         
