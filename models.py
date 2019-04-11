@@ -27,22 +27,24 @@ class Player:
         self.jump_status += 1
 
     def move_player_out_of_block(self, block_hit_list):
+   
         for block_x, block_y in block_hit_list:
-            if self.y > block_y:
-                if self.vy < 0:
-                    self.y = block_y + (self.block_size * 3 / 2)
-                    self.vy = 0
-                    self.jump_status = 0
-            elif self.y < block_y:
+            if self.y > block_y + self.block_size: # on block
+                if self.vy < 0: # falling
+                    if not (block_x + self.block_size == self.x or block_x - self.block_size == self.x):
+                        self.y = block_y + (self.block_size * 3 / 2)
+                        self.vy = 0
+                        self.jump_status = 0
+            elif self.y < block_y - self.block_size:
                 if self.vy > 0:
                     self.y = block_y - (self.block_size * 3 / 2)
                     self.vy = 0
             elif self.x > block_x:
-                if self.vx < 0:
-                    self.x = block_x + (self.block_size * 3 / 2)
+                if self.vx <= 0:
+                    self.x = block_x + (self.block_size)
             elif self.x < block_x:
-                if self.vx > 0:
-                    self.x = block_x - (self.block_size * 3 / 2)
+                if self.vx >= 0:
+                    self.x = block_x - (self.block_size)
 
     def update(self, delta):
         self.x += self.vx
@@ -52,6 +54,9 @@ class Player:
             self.vy -= Player.GRAVITY
 
         block_hit_list = spritecollide(self.x, self.y ,self.height, self.block_size, self.stage.block_list)
+        if len(block_hit_list) == 3:
+            del block_hit_list[2]
+            
         self.move_player_out_of_block(block_hit_list)
 
 
@@ -129,9 +134,7 @@ class Slime:
                     self.vx = -self.vx
     def get_position(self):
         return self.x, self.y
-##
-##    def hit_bullet(self):
-##        
+
 
     def update(self, delta):
         self.x += self.vx
@@ -221,11 +224,11 @@ class Stage:
                     '.................##.',
                     '....................',
                     '....................',
-                    '...........##.......',
+                    '....................',
                     '.......#............',
-                    '......##............',
-                    '.....###....0.......',
-                    '...0####.........0.#',
+                    '......##...#.#......',
+                    '.....###...#.#......',
+                    '...0####...#.#...0.#',
                     '####################' ]
         self.height = len(self.map)
         self.width = len(self.map[0])
