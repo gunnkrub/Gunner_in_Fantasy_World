@@ -34,6 +34,9 @@ class Player:
         for block_x, block_y in block_hit_list:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 06c6164... codetect changed
             if self.y > block_y + self.block_size:
                 if self.vy < 0:
                     if not (block_x + self.block_size == self.x or block_x - self.block_size == self.x):
@@ -41,6 +44,7 @@ class Player:
                         self.vy = 0
                         self.jump_status = 0
             elif self.y < block_y - self.block_size:
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> parent of ac74285... Fix player collision
@@ -54,13 +58,16 @@ class Player:
 >>>>>>> parent of ac74285... Fix player collision
 =======
 >>>>>>> parent of ac74285... Fix player collision
+=======
+>>>>>>> parent of 06c6164... codetect changed
                 if self.vy > 0:
                     self.y = block_y - (self.block_size * 3 / 2)
                     self.vy = 0
             elif self.x > block_x:
-                if self.vx < 0:
-                    self.x = block_x + (self.block_size * 3 / 2)
+                if self.vx <= 0:
+                    self.x = block_x + (self.block_size)
             elif self.x < block_x:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 if self.vx >= 0:
@@ -73,6 +80,10 @@ class Player:
                 if self.vx > 0:
                     self.x = block_x - (self.block_size * 3 / 2)
 >>>>>>> parent of ac74285... Fix player collision
+=======
+                if self.vx >= 0:
+                    self.x = block_x - (self.block_size)    
+>>>>>>> parent of 06c6164... codetect changed
 
     def update(self, delta):
         self.x += self.vx
@@ -82,6 +93,9 @@ class Player:
             self.vy -= Player.GRAVITY
 
         block_hit_list = spritecollide(self.x, self.y ,self.height, self.block_size, self.stage.block_list)
+        if len(block_hit_list) == 3:
+            del block_hit_list[2]
+            
         self.move_player_out_of_block(block_hit_list)
 
 
@@ -159,9 +173,7 @@ class Slime:
                     self.vx = -self.vx
     def get_position(self):
         return self.x, self.y
-##
-##    def hit_bullet(self):
-##        
+
 
     def update(self, delta):
         self.x += self.vx
@@ -249,7 +261,6 @@ class World:
 class Stage:
     def __init__(self,world):
         self.world = world
-<<<<<<< HEAD
         map1 = 'maps/map1.txt'
         map2 = 'maps/map2.txt'
         map3 = 'maps/map3.txt'
@@ -270,23 +281,6 @@ class Stage:
 ##                    '.....###...#.#......',
 ##                    '...0####...#.#...0.#',
 ##                    '####################' ]
-=======
-        self.map = ['....................',
-                    '....................',
-                    '....................',
-                    '....................',
-                    '....................',
-                    '....................',
-                    '.................##.',
-                    '....................',
-                    '....................',
-                    '...........##.......',
-                    '.......#............',
-                    '......##............',
-                    '.....###....0.......',
-                    '...0####.........0.#',
-                    '####################' ]
->>>>>>> parent of ac74285... Fix player collision
         self.height = len(self.map)
         self.width = len(self.map[0])
         self.block_list = []
