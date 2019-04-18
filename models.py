@@ -29,39 +29,13 @@ class Player:
     def move_player_out_of_block(self, block_hit_list):
    
         for block_x, block_y in block_hit_list:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of 06c6164... codetect changed
-            if self.y > block_y + self.block_size:
-                if self.vy < 0:
-=======
             if self.y > block_y + self.block_size: # on block
                 if self.vy < 0: # falling
->>>>>>> parent of 83f5491... change map (version Popia)
                     if not (block_x + self.block_size == self.x or block_x - self.block_size == self.x):
                         self.y = block_y + (self.block_size * 3 / 2)
                         self.vy = 0
                         self.jump_status = 0
             elif self.y < block_y - self.block_size:
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of ac74285... Fix player collision
-            if self.y > block_y:
-                if self.vy < 0:
-                    self.y = block_y + (self.block_size * 3 / 2)
-                    self.vy = 0
-                    self.jump_status = 0
-            elif self.y < block_y:
-<<<<<<< HEAD
->>>>>>> parent of ac74285... Fix player collision
-=======
->>>>>>> parent of ac74285... Fix player collision
-=======
->>>>>>> parent of 06c6164... codetect changed
                 if self.vy > 0:
                     self.y = block_y - (self.block_size * 3 / 2)
                     self.vy = 0
@@ -69,27 +43,8 @@ class Player:
                 if self.vx <= 0:
                     self.x = block_x + (self.block_size)
             elif self.x < block_x:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                 if self.vx >= 0:
-                    self.x = block_x - (self.block_size)    
-=======
-                if self.vx > 0:
-                    self.x = block_x - (self.block_size * 3 / 2)
->>>>>>> parent of ac74285... Fix player collision
-=======
-                if self.vx > 0:
-                    self.x = block_x - (self.block_size * 3 / 2)
->>>>>>> parent of ac74285... Fix player collision
-=======
-                if self.vx >= 0:
-<<<<<<< HEAD
-                    self.x = block_x - (self.block_size)    
->>>>>>> parent of 06c6164... codetect changed
-=======
                     self.x = block_x - (self.block_size)
->>>>>>> parent of 83f5491... change map (version Popia)
 
     def update(self, delta):
         self.x += self.vx
