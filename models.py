@@ -1,9 +1,5 @@
 import arcade.key
 from codetect import spritecollide
-from MapReader import reader
-MAPP = ['maps/map1.txt',
-        'maps/map2.txt',
-        'maps/map3.txt']
 class Player:
     JUMPING_VELOCITY = 15
     GRAVITY = 1
@@ -31,7 +27,9 @@ class Player:
         self.jump_status += 1
 
     def move_player_out_of_block(self, block_hit_list):
+   
         for block_x, block_y in block_hit_list:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -39,6 +37,10 @@ class Player:
 >>>>>>> parent of 06c6164... codetect changed
             if self.y > block_y + self.block_size:
                 if self.vy < 0:
+=======
+            if self.y > block_y + self.block_size: # on block
+                if self.vy < 0: # falling
+>>>>>>> parent of 83f5491... change map (version Popia)
                     if not (block_x + self.block_size == self.x or block_x - self.block_size == self.x):
                         self.y = block_y + (self.block_size * 3 / 2)
                         self.vy = 0
@@ -82,8 +84,12 @@ class Player:
 >>>>>>> parent of ac74285... Fix player collision
 =======
                 if self.vx >= 0:
+<<<<<<< HEAD
                     self.x = block_x - (self.block_size)    
 >>>>>>> parent of 06c6164... codetect changed
+=======
+                    self.x = block_x - (self.block_size)
+>>>>>>> parent of 83f5491... change map (version Popia)
 
     def update(self, delta):
         self.x += self.vx
@@ -183,8 +189,7 @@ class Slime:
         block_hit_list = spritecollide(self.x, self.y ,self.height, self.block_size, self.stage.block_list)
         self.move_slime_out_of_block(block_hit_list)
 
-    def delete(self):
-        self.world.slime.remove(self)
+        
 
 
 
@@ -201,11 +206,9 @@ class World:
 
         self.bullet = [] # bullet()
         self.slime = [] # slime()
-
-        self.slime_list = []
+        self.slime_list = [] # position of slime
 
         self.write_slime_list()
-        self.currentmap = 0
 
     def get_bullet_position(self):
         bullet_list = []
@@ -213,6 +216,14 @@ class World:
             bullet_list.append(self.Bullet.get_position())
         return bullet_list
             
+
+##    def write_slime_list(self):
+##        for Slime in self.slime:
+##            for slime_x, slime_y in self.Slime.get_position():
+##                print((slime_x,slime_y))
+##                self.slime_list.append((slime_x, slime_y))
+
+    
     def write_slime_list(self):    
         for row in range(self.stage.height):
             for column in range(self.stage.width):
@@ -220,13 +231,15 @@ class World:
                     self.slime_list.append(self.stage.get_sprite_position(row, column))
         for slime_x, slime_y in self.slime_list:
             self.slime.append(Slime(self, slime_x, slime_y, self.stage, self.player, self.block_size))
-
+        
     def update(self, delta):
         self.player.update(delta)
         for bullet in self.bullet:
             bullet.update(delta)
         for slime in self.slime:
             slime.update(delta)
+
+
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
@@ -238,49 +251,30 @@ class World:
             self.player.vx += 5
         if key == arcade.key.SPACE:
             self.bullet.append(Bullet(self))
-        if key == arcade.key.E:
-            if self.currentmap == 3:
-                self.currentmap = 0
-            self.readmap(MAPP[self.currentmap])
-            self.currentmap += 1
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.A or key == arcade.key.D:
             self.player.vx = 0
-    def readmap(self,mapp):
-        for slime in self.slime:
-            slime.delete()
-        for bullet in self.bullet:
-            bullet.delete()
-        self.stage.delete()
-        self.stage.map = reader(mapp)
-        self.stage.write_block_list()
-        self.write_slime_list
-        self.player.x = 30
-        self.player.y = 80
+
+
 class Stage:
     def __init__(self,world):
         self.world = world
-        map1 = 'maps/map1.txt'
-        map2 = 'maps/map2.txt'
-        map3 = 'maps/map3.txt'
-        mapp = map1
-        self.map = reader(mapp)
-##        self.map = ['....................',
-##                    '....................',
-##                    '....................',
-##                    '....................',
-##                    '....................',
-##                    '....................',
-##                    '.................##.',
-##                    '....................',
-##                    '....................',
-##                    '....................',
-##                    '.......#............',
-##                    '......##...#.#......',
-##                    '.....###...#.#......',
-##                    '...0####...#.#...0.#',
-##                    '####################' ]
+        self.map = ['....................',
+                    '....................',
+                    '....................',
+                    '....................',
+                    '....................',
+                    '....................',
+                    '.................##.',
+                    '....................',
+                    '....................',
+                    '....................',
+                    '.......#............',
+                    '......##...#.#......',
+                    '.....###...#.#......',
+                    '...0####...#.#...0.#',
+                    '####################' ]
         self.height = len(self.map)
         self.width = len(self.map[0])
         self.block_list = []
@@ -306,8 +300,6 @@ class Stage:
         return self.map[row][column] == '.'
     def has_slime(self, row, column):
         return self.map[row][column] == '0'
-    def delete(self):
-        self.block_list = []
 
     
 
