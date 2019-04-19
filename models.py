@@ -191,6 +191,12 @@ class World:
             bullet.update(delta)
         for slime in self.slime:
             slime.update(delta)
+        if self.player.x > 800:
+            self.currentmap += 1
+            if self.currentmap == 3:
+                self.currentmap = 0
+            
+            self.readmap(MAPP[self.currentmap])
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
@@ -203,23 +209,29 @@ class World:
         if key == arcade.key.SPACE:
             self.bullet.append(Bullet(self))
         if key == arcade.key.E:
+            self.currentmap += 1
             if self.currentmap == 3:
                 self.currentmap = 0
+            
             self.readmap(MAPP[self.currentmap])
-            self.currentmap += 1
+            
+            
+            
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.A or key == arcade.key.D:
             self.player.vx = 0
     def readmap(self,mapp):
+        self.slime_list = []
         for slime in self.slime:
             slime.delete()
-        for bullet in self.bullet:
-            bullet.delete()
+        
+##        for bullet in self.bullet:
+##            bullet.delete()
         self.stage.delete()
         self.stage.map = reader(mapp)
         self.stage.write_block_list()
-        self.write_slime_list
+        self.write_slime_list()
         self.player.x = 30
         self.player.y = 80
 class Stage:
