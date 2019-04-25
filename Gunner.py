@@ -1,5 +1,6 @@
 import arcade
 from models import World, Stage
+
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 BLOCK_SIZE = 40
@@ -17,10 +18,10 @@ class ModelSprite(arcade.Sprite):
         if self.model:
             self.set_position(self.model.x, self.model.y)
 
- 
     def draw(self):
         self.sync_with_model()
         super().draw()
+
         
 class BulletSprite:
     def __init__(self):
@@ -30,6 +31,7 @@ class BulletSprite:
         for bullet in bullet_list:
             self.sprite.set_position(bullet.x,bullet.y)
             self.sprite.draw()
+
 
 class SlimeSprite():
     def __init__(self):
@@ -55,7 +57,6 @@ class GunnerWindow(arcade.Window):
 
         self.stage_drawer = StageDrawer(self.world.stage)
 
-
     def update(self, delta):
         self.world.update(delta)
     
@@ -76,7 +77,6 @@ class GunnerWindow(arcade.Window):
         self.world.on_key_release(key, key_modifiers)
  
 
-
 class StageDrawer():
     def __init__(self, stage):
         self.stage = stage
@@ -84,7 +84,6 @@ class StageDrawer():
         self.height = self.stage.height
 
         self.block_sprite = arcade.Sprite('images/Block.png')
-        
         
     def get_sprite_position(self, row, column):
         # find x,y from column,row
@@ -106,9 +105,6 @@ class StageDrawer():
                     self.draw_sprite(self.block_sprite, row, column)
 
                     
-
-                                        
-
 def main():
     window = GunnerWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
     arcade.set_window(window)
