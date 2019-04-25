@@ -1,9 +1,10 @@
 import arcade.key
 from codetect import spritecollide
 from MapReader import reader
-MAPP = ['maps/map1.txt',
-        'maps/map2.txt',
-        'maps/map3.txt']
+MAP = ['maps/map1.txt',
+       'maps/map2.txt',
+       'maps/map3.txt']
+TOTAL_MAP = len(MAP)
 class Player:
     JUMPING_VELOCITY = 15
     GRAVITY = 1
@@ -122,7 +123,6 @@ class Slime:
                 if self.vy < 0:
                     self.y = block_y + (self.block_size)
                     self.vy = 0
-                    
             elif self.y < block_y:
                 if self.vy > 0:
                     self.y = block_y - (self.block_size)
@@ -159,17 +159,19 @@ class World:
         self.width = width
         self.height = height
         self.block_size = block_size
+        TIME = 1 # 1 = normal, 2 = freeze
+        self.currentmap = 0
 
         self.stage = Stage(self)
         self.player = Player(self, 30, 80, self.stage, self.block_size)
 
-        self.bullet = [] # bullet()
-        self.slime = [] # slime()
+        self.bullet = [] # list of bullet()
+        self.slime = [] # list of slime()
 
-        self.slime_list = []
+        self.slime_list = [] # slime spawn location
 
         self.write_slime_list()
-        self.currentmap = 0
+        
 
     def get_bullet_position(self):
         bullet_list = []
@@ -178,12 +180,14 @@ class World:
         return bullet_list
             
     def write_slime_list(self):    
-        for row in range(self.stage.height):
+        for row in range(self.stage.height): # write slime_list
             for column in range(self.stage.width):
                 if self.stage.has_slime(row, column):
                     self.slime_list.append(self.stage.get_sprite_position(row, column))
-        for slime_x, slime_y in self.slime_list:
+                    
+        for slime_x, slime_y in self.slime_list: # write slime
             self.slime.append(Slime(self, slime_x, slime_y, self.stage, self.player, self.block_size))
+
 
     def update(self, delta):
         self.player.update(delta)
@@ -191,12 +195,20 @@ class World:
             bullet.update(delta)
         for slime in self.slime:
             slime.update(delta)
+            
         if self.player.x > 800:
             self.currentmap += 1
-            if self.currentmap == 3:
+            if self.currentmap == TOTAL_MAP:
                 self.currentmap = 0
+            self.readmap(MAP[self.currentmap])
+            self.player.x = 0
             
-            self.readmap(MAPP[self.currentmap])
+        elif self.player.x < 0:
+            self.currentmap -= 1
+            if self.currentmap == -1:
+                self.currentmap = TOTAL_MAP - 1
+            self.readmap(MAP[self.currentmap])
+            self.player.x = 800
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
@@ -210,10 +222,11 @@ class World:
             self.bullet.append(Bullet(self))
         if key == arcade.key.E:
             self.currentmap += 1
-            if self.currentmap == 3:
+            if self.currentmap == TOTAL_MAP:
                 self.currentmap = 0
+
             
-            self.readmap(MAPP[self.currentmap])
+            self.readmap(MAP[self.currentmap])
             
             
             
@@ -221,27 +234,24 @@ class World:
     def on_key_release(self, key, modifiers):
         if key == arcade.key.A or key == arcade.key.D:
             self.player.vx = 0
-    def readmap(self,mapp):
+            
+    def readmap(self,Map):
+        #reset slime and bullet
         self.slime_list = []
-        for slime in self.slime:
-            slime.delete()
-        
-##        for bullet in self.bullet:
-##            bullet.delete()
+        self.slime = []
+        self.bullet = []
+        #delete stage and create new one
         self.stage.delete()
-        self.stage.map = reader(mapp)
+        
+        self.stage.map = reader(MAP[self.currentmap])
         self.stage.write_block_list()
         self.write_slime_list()
-        self.player.x = 30
-        self.player.y = 80
+
 class Stage:
     def __init__(self,world):
         self.world = world
-        map1 = 'maps/map1.txt'
-        map2 = 'maps/map2.txt'
-        map3 = 'maps/map3.txt'
-        mapp = map1
-        self.map = reader(mapp)
+        Map = MAP[self.world.currentmap]
+        self.map = reader(Map)
 ##        self.map = ['....................',
 ##                    '....................',
 ##                    '....................',
