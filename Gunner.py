@@ -64,6 +64,7 @@ class GunnerWindow(arcade.Window):
     
     def on_draw(self):
         arcade.start_render()
+##        arcade.draw_text(f'KILL {self.world.player.x}', 400, 300, arcade.color.YELLOW, 60)
 
         if self.world.player.turn == 0:
             self.player_right_sprite.draw()
