@@ -244,12 +244,11 @@ class World:
             self.player.vx = 5
 
 
-        if self.time == 0:
-            if key == arcade.key.SPACE:
-                self.bullet.append(Bullet(self))
+        if key == arcade.key.SPACE:
+            self.bullet.append(Bullet(self))
                 
         if self.time == 1:
-            if key == arcade.key.SPACE:
+            if key == arcade.key.R:
                 self.time = 0
                 self.change_map(MAP[0])
                 self.currentmap = 0
