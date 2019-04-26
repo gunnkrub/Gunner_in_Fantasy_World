@@ -7,6 +7,10 @@ BLOCK_SIZE = 40
 PLAYER_SIZE_X = 40
 PLAYER_SIZE_Y = 80
 
+BG = ["images/background1.png",
+      "images/background2.png",
+      "images/background3.png",
+      "images/background4.png"]
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
@@ -46,8 +50,7 @@ class SlimeSprite():
 class GunnerWindow(arcade.Window):
     def __init__(self, width, height):
         super().__init__(width, height)
- 
-        arcade.set_background_color(arcade.color.WHITE)
+
  
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_SIZE)
 
@@ -56,7 +59,16 @@ class GunnerWindow(arcade.Window):
         self.player_left_sprite = ModelSprite('images/Gunner_left.png', model=self.world.player)
         self.bullet_sprite = BulletSprite()
         self.slime_sprite = SlimeSprite()
-
+        
+##        if self.world.currentmap == 0:
+##            self.background = arcade.Sprite("images/background1.jpg")
+##        if self.world.currentmap == 1:
+##            self.background = arcade.Sprite("images/background2.png")
+##        if self.world.currentmap == 2:
+##            self.background = arcade.Sprite("images/background3.jpg")
+##        if self.world.currentmap == 3:
+##            self.background = arcade.Sprite("images/background4.png")
+##            
         self.stage_drawer = StageDrawer(self.world.stage)
 
     def update(self, delta):
@@ -64,8 +76,10 @@ class GunnerWindow(arcade.Window):
     
     def on_draw(self):
         arcade.start_render()
-##        arcade.draw_text(f'KILL {self.world.player.x}', 400, 300, arcade.color.YELLOW, 60)
-
+        print(self.world.currentmap)
+        self.background = arcade.Sprite(BG[self.world.currentmap])
+        self.background.set_position(400,300)
+        self.background.draw()
         if self.world.player.turn == 0:
             self.player_right_sprite.draw()
         if self.world.player.turn == 1:
@@ -73,8 +87,11 @@ class GunnerWindow(arcade.Window):
         
         self.slime_sprite.draw(self.world.slime)
         self.bullet_sprite.draw(self.world.bullet)
-
+    
         self.stage_drawer.draw()
+        
+        if self.world.time == 1:
+            arcade.draw_text(f"PRESS 'R' TO RESTART", 75, 500, arcade.color.WHITE, 60)
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)

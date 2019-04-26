@@ -289,7 +289,6 @@ class World:
             bullet.update(delta)
         for slime in self.slime:
             slime.update(delta)
-
         
             
             
