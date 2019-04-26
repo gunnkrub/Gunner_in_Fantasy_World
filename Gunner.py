@@ -51,7 +51,9 @@ class GunnerWindow(arcade.Window):
  
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT, BLOCK_SIZE)
 
-        self.player_sprite = ModelSprite('images/Gunner.png', model=self.world.player)
+        self.world.player.turn = 0
+        self.player_right_sprite = ModelSprite('images/Gunner_right.png', model=self.world.player)
+        self.player_left_sprite = ModelSprite('images/Gunner_left.png', model=self.world.player)
         self.bullet_sprite = BulletSprite()
         self.slime_sprite = SlimeSprite()
 
@@ -63,7 +65,10 @@ class GunnerWindow(arcade.Window):
     def on_draw(self):
         arcade.start_render()
 
-        self.player_sprite.draw()
+        if self.world.player.turn == 0:
+            self.player_right_sprite.draw()
+        if self.world.player.turn == 1:
+            self.player_left_sprite.draw()
         
         self.slime_sprite.draw(self.world.slime)
         self.bullet_sprite.draw(self.world.bullet)
