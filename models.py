@@ -227,7 +227,7 @@ class World:
         self.stage = Stage(self)
         self.player = Player(self, 30, 80, self.stage, self.block_size)
         self.write_slime()
-        self.write_checkpoint(1, 500, 60)
+        
        
     def write_slime(self):    
         for row in range(self.stage.height): # write slime_location
@@ -240,7 +240,10 @@ class World:
 
     def write_checkpoint(self, currentmap, x, y):    
         if self.currentmap == currentmap:
-            self.checkpoint.append(Checkpoint(self, x, y)
+            self.checkpoint.append(Checkpoint(self, x, y))
+        else:
+            if self.checkpoint != []:
+                self.checkpoint = []
                                    
     def change_map(self, Map):
         self.slime_spawn_location = []
@@ -253,6 +256,7 @@ class World:
         self.stage.map = reader(Map)
         self.stage.write_block_list()
         self.write_slime()
+        self.write_checkpoint(1, 500, 80)
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
@@ -275,8 +279,8 @@ class World:
         if self.time == 1:
             if key == arcade.key.R:
                 self.time = 0
-                self.change_map(MAP[0])
                 self.currentmap = 0
+                self.change_map(MAP[0])
                 self.player.x = 30
                 self.player.y = 80
                 
@@ -314,8 +318,8 @@ class World:
             bullet.update(delta)
         for slime in self.slime:
             slime.update(delta)
-        for checkpoint in self.checkpoint:
-            checkpoint.update(delta)
+##        for checkpoint in self.checkpoint:
+##            checkpoint.update(delta)
         
             
             

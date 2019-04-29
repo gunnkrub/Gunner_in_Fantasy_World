@@ -51,7 +51,7 @@ class CheckpointSprite():
         self.sprite = arcade.Sprite('images/Checkpoint.png')
 
     def draw(self, checkpoint_list):
-        for checkpoint in slime_list:
+        for checkpoint in checkpoint_list:
             self.sprite.set_position(checkpoint.x, checkpoint.y)
             self.sprite.draw()
         
@@ -86,7 +86,6 @@ class GunnerWindow(arcade.Window):
     
     def on_draw(self):
         arcade.start_render()
-        print(self.world.currentmap)
         self.background = arcade.Sprite(BG[self.world.currentmap])
         self.background.set_position(400,300)
         self.background.draw()
