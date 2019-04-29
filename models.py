@@ -1,5 +1,5 @@
 import arcade.key
-from codetect import spritecollide
+from codetect import spritecollide, checkpointcollision
 from MapReader import reader
 
 MAP = ['maps/map1.txt',
@@ -44,7 +44,12 @@ class Player:
         if slime_hit_list != []:
             return True
 
-##    def hit_checkpoint(self):
+    def hit_checkpoint(self):
+        for checkpoint in self.world.checkpoint:
+            if checkpointcollision(self.x, self.y, checkpoint.x, checkpoint.y):
+##                print('xd')
+                checkpoint.delete()
+            
         
             
     def dead(self):
@@ -96,6 +101,7 @@ class Player:
             self.vy -= GRAVITY
         self.change_map()
         self.check_turn()
+        self.hit_checkpoint()
 
         block_hit_list = spritecollide(self.x, self.y ,self.height, self.block_size, self.stage.block_list)
         self.move_out_of_block(block_hit_list)
@@ -204,11 +210,11 @@ class Checkpoint:
         self.x = x
         self.y = y
         
-    def update(self):
+    def update(self, delta):
         pass
 
     def delete(self):
-        self.world.slime.remove(self)
+        self.world.checkpoint.remove(self)
 
 
 class World:
@@ -318,8 +324,8 @@ class World:
             bullet.update(delta)
         for slime in self.slime:
             slime.update(delta)
-##        for checkpoint in self.checkpoint:
-##            checkpoint.update(delta)
+        for checkpoint in self.checkpoint:
+            checkpoint.update(delta)
         
             
             
