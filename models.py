@@ -43,6 +43,9 @@ class Player:
         slime_hit_list = spritecollide(self.x, self.y ,self.height, self.block_size, slime_list)
         if slime_hit_list != []:
             return True
+
+##    def hit_checkpoint(self):
+        
             
     def dead(self):
         self.world.time = 1
@@ -192,6 +195,22 @@ class Slime:
         self.world.slime.remove(self)
 
 
+class Checkpoint:
+    def __init__(self, world, x, y):
+        self.world = world
+        self.block_size = 40
+        self.height = 2 * self.block_size
+        self.width = self.block_size
+        self.x = x
+        self.y = y
+        
+    def update(self):
+        pass
+
+    def delete(self):
+        self.world.slime.remove(self)
+
+
 class World:
     def __init__(self, width, height, block_size):
         self.width = width
@@ -200,6 +219,7 @@ class World:
         self.slime_spawn_location = []
         self.bullet = []
         self.slime = []
+        self.checkpoint = []
         self.pressing = []
         self.time = 0
         self.currentmap = 0
@@ -207,9 +227,10 @@ class World:
         self.stage = Stage(self)
         self.player = Player(self, 30, 80, self.stage, self.block_size)
         self.write_slime()
+        self.write_checkpoint(1, 500, 60)
        
     def write_slime(self):    
-        for row in range(self.stage.height): # write slime_list
+        for row in range(self.stage.height): # write slime_location
             for column in range(self.stage.width):
                 if self.stage.has_slime(row, column):
                     self.slime_spawn_location.append(self.stage.get_sprite_position(row, column))
@@ -217,6 +238,10 @@ class World:
         for slime_x, slime_y in self.slime_spawn_location: # write slime
             self.slime.append(Slime(self, slime_x, slime_y, self.stage, self.player, self.block_size))
 
+    def write_checkpoint(self, currentmap, x, y):    
+        if self.currentmap == currentmap:
+            self.checkpoint.append(Checkpoint(self, x, y)
+                                   
     def change_map(self, Map):
         self.slime_spawn_location = []
         self.slime = []
@@ -289,6 +314,8 @@ class World:
             bullet.update(delta)
         for slime in self.slime:
             slime.update(delta)
+        for checkpoint in self.checkpoint:
+            checkpoint.update(delta)
         
             
             
@@ -325,6 +352,7 @@ class Stage:
         return self.map[row][column] == '.'
     def has_slime(self, row, column):
         return self.map[row][column] == '0'
+
     
 
     

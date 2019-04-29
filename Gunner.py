@@ -31,7 +31,7 @@ class BulletSprite:
     def __init__(self):
         self.sprite = arcade.Sprite('images/Bullet.png')
         
-    def draw(self,bullet_list):
+    def draw(self, bullet_list):
         for bullet in bullet_list:
             self.sprite.set_position(bullet.x,bullet.y)
             self.sprite.draw()
@@ -44,6 +44,15 @@ class SlimeSprite():
     def draw(self, slime_list):
         for slime in slime_list:
             self.sprite.set_position(slime.x, slime.y)
+            self.sprite.draw()
+
+class CheckpointSprite():
+    def __init__(self):
+        self.sprite = arcade.Sprite('images/Checkpoint.png')
+
+    def draw(self, checkpoint_list):
+        for checkpoint in slime_list:
+            self.sprite.set_position(checkpoint.x, checkpoint.y)
             self.sprite.draw()
         
             
@@ -59,6 +68,7 @@ class GunnerWindow(arcade.Window):
         self.player_left_sprite = ModelSprite('images/Gunner_left.png', model=self.world.player)
         self.bullet_sprite = BulletSprite()
         self.slime_sprite = SlimeSprite()
+        self.checkpoint_sprite = CheckpointSprite()
         
 ##        if self.world.currentmap == 0:
 ##            self.background = arcade.Sprite("images/background1.jpg")
@@ -87,7 +97,8 @@ class GunnerWindow(arcade.Window):
         
         self.slime_sprite.draw(self.world.slime)
         self.bullet_sprite.draw(self.world.bullet)
-    
+        self.checkpoint_sprite.draw(self.world.checkpoint)
+        
         self.stage_drawer.draw()
         
         if self.world.time == 1:
