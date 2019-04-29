@@ -1,5 +1,5 @@
 import arcade.key
-from codetect import spritecollide, checkpointcollision
+from codetect import spritecollide, collision
 from MapReader import reader
 
 MAP = ['maps/map1.txt',
@@ -24,7 +24,6 @@ class Player:
 
         self.turn = 0 # 0-right 1-left
         self.jump_status = 0
-        self.heart_status = 3
         
     def jump(self):
         self.vy = Player.JUMPING_VELOCITY
@@ -46,17 +45,11 @@ class Player:
 
     def hit_checkpoint(self):
         for checkpoint in self.world.checkpoint:
-            if checkpointcollision(self.x, self.y, checkpoint.x, checkpoint.y):
-##                print('xd')
+            if collision(self.x, self.y, 40, 80, checkpoint.x, checkpoint.y, 40, 80):
                 checkpoint.delete()
-            
-        
             
     def dead(self):
         self.world.time = 1
-
-        
-            
 
     def move_out_of_block(self, block_hit_list):
         for block_x, block_y in block_hit_list:
@@ -119,6 +112,9 @@ class Bullet:
         self.player = self.world.player
         self.bullet_width = 6
         self.bullet_height = 3
+        self.vx = self.get_direction()
+            
+    def get_direction(self):
         if self.player.turn == 0:
             self.x = self.player.x + (self.player.block_size / 2)
             self.y = self.player.y - 2
@@ -127,7 +123,7 @@ class Bullet:
             self.x = self.player.x - (self.player.block_size / 2)
             self.y = self.player.y - 2
             self.vx = -5
-        
+        return self.vx
 
     def hit_block(self):
         for block_x, block_y in self.world.stage.block_list:
@@ -226,6 +222,7 @@ class World:
         self.bullet = []
         self.slime = []
         self.checkpoint = []
+        self.spawnpoint = [(1,30,80)]
         self.pressing = []
         self.time = 0
         self.currentmap = 0
@@ -277,10 +274,10 @@ class World:
         if key == arcade.key.D:
             self.pressing.append('D')
             self.player.vx = 5
-
-
-        if key == arcade.key.SPACE:
-            self.bullet.append(Bullet(self))
+        
+        if self.time == 0:
+            if key == arcade.key.SPACE:
+                self.bullet.append(Bullet(self))
                 
         if self.time == 1:
             if key == arcade.key.R:

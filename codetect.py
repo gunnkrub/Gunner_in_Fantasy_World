@@ -7,6 +7,21 @@ def spritecollide(x, y, height, block_size, block_list):
                         block_hit_list.append([block_x,block_y])   
         return block_hit_list
 
+def collision(x, y, width, height, x2, y2, width2, height2):
+        if x2 - (width2 // 2) <= x + width <= x2 + (width2 // 2) or x2 - (width2 // 2) <= x - width <= x2 + (width2 // 2):
+                if y2 - (height2 // 2) <= y + height <= y2 + (height2 // 2) or y2 - (height2 // 2) <= y - width <= y2 + (y2 // 2):
+                        return True
+
+
+
+
+
+
+
+
+
+
+
 def checkpointcollision(x, y, flag_x, flag_y):
         height = 80
         width = 40
