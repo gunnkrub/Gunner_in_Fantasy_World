@@ -222,7 +222,7 @@ class World:
         self.bullet = []
         self.slime = []
         self.checkpoint = []
-        self.spawnpoint = [(1,30,80)]
+        self.spawnpoint = [0, 30, 80]
         self.pressing = []
         self.time = 0
         self.currentmap = 0
@@ -241,12 +241,12 @@ class World:
         for slime_x, slime_y in self.slime_spawn_location: # write slime
             self.slime.append(Slime(self, slime_x, slime_y, self.stage, self.player, self.block_size))
 
-    def write_checkpoint(self, currentmap, x, y):    
-        if self.currentmap == currentmap:
+    def write_checkpoint(self, currentmap, x, y):
+        if currentmap > self.spawnpoint[0]:
+            self.checkpoint = []
+            self.spawnpoint = [currentmap,x,y]
             self.checkpoint.append(Checkpoint(self, x, y))
-        else:
-            if self.checkpoint != []:
-                self.checkpoint = []
+
                                    
     def change_map(self, Map):
         self.slime_spawn_location = []
@@ -260,6 +260,7 @@ class World:
         self.stage.write_block_list()
         self.write_slime()
         self.write_checkpoint(1, 500, 80)
+        self.write_checkpoint(2, 580, 80)
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
@@ -282,10 +283,10 @@ class World:
         if self.time == 1:
             if key == arcade.key.R:
                 self.time = 0
-                self.currentmap = 0
-                self.change_map(MAP[0])
-                self.player.x = 30
-                self.player.y = 80
+                self.currentmap = self.spawnpoint[0]
+                self.change_map(MAP[self.currentmap])
+                self.player.x = self.spawnpoint[1]
+                self.player.y = self.spawnpoint[2]
                 
                 
     def on_key_release(self, key, modifiers):
