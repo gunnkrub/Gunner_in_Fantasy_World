@@ -46,6 +46,7 @@ class Player:
     def hit_checkpoint(self):
         for checkpoint in self.world.checkpoint:
             if collision(self.x, self.y, 40, 80, checkpoint.x, checkpoint.y, 40, 80):
+                self.world.spawnpoint = [checkpoint.map, checkpoint.x, checkpoint.y]
                 checkpoint.delete()
             
     def dead(self):
@@ -198,8 +199,9 @@ class Slime:
 
 
 class Checkpoint:
-    def __init__(self, world, x, y):
+    def __init__(self, world, Map, x, y):
         self.world = world
+        self.map = Map
         self.block_size = 40
         self.height = 2 * self.block_size
         self.width = self.block_size
@@ -242,10 +244,10 @@ class World:
             self.slime.append(Slime(self, slime_x, slime_y, self.stage, self.player, self.block_size))
 
     def write_checkpoint(self, currentmap, x, y):
-        if currentmap > self.spawnpoint[0]:
-            self.checkpoint = []
-            self.spawnpoint = [currentmap,x,y]
-            self.checkpoint.append(Checkpoint(self, x, y))
+        if self.currentmap == currentmap:
+            if currentmap > self.spawnpoint[0]:
+                self.checkpoint.append(Checkpoint(self, currentmap, x, y))
+
 
                                    
     def change_map(self, Map):
@@ -259,8 +261,9 @@ class World:
         self.stage.map = reader(Map)
         self.stage.write_block_list()
         self.write_slime()
+        self.checkpoint = []
         self.write_checkpoint(1, 500, 80)
-        self.write_checkpoint(2, 580, 80)
+        self.write_checkpoint(2, 580, 120)
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
