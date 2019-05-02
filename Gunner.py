@@ -9,7 +9,7 @@ PLAYER_SIZE_Y = 80
 
 BG = ["images/background1.png",
       "images/background2.png",
-      "images/background3.png",
+      "images/background3.jpg",
       "images/background4.png"]
 
 class ModelSprite(arcade.Sprite):
