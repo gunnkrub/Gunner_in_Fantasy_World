@@ -29,7 +29,7 @@ class ModelSprite(arcade.Sprite):
         
 class BulletSprite:
     def __init__(self):
-        self.sprite = arcade.Sprite('images/Bullet.png')
+        self.sprite = arcade.Sprite('images/Bullet.png',scale = 1.5)
         
     def draw(self, bullet_list):
         for bullet in bullet_list:

@@ -119,11 +119,11 @@ class Bullet:
         if self.player.turn == 0:
             self.x = self.player.x + (self.player.block_size / 2)
             self.y = self.player.y - 2
-            self.vx = 5
+            self.vx = 7
         if self.player.turn == 1:
             self.x = self.player.x - (self.player.block_size / 2)
             self.y = self.player.y - 2
-            self.vx = -5
+            self.vx = -7
         return self.vx
 
     def hit_block(self):
