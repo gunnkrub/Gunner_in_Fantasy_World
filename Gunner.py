@@ -86,7 +86,8 @@ class GunnerWindow(arcade.Window):
     
     def on_draw(self):
         arcade.start_render()
-        self.background = arcade.Sprite(BG[self.world.currentmap])
+        self.background = arcade.Sprite("images/forest.png")
+##        self.background = arcade.Sprite(BG[self.world.currentmap])
         self.background.set_position(400,300)
         self.background.draw()
         if self.world.player.turn == 0:
@@ -99,9 +100,15 @@ class GunnerWindow(arcade.Window):
         self.checkpoint_sprite.draw(self.world.checkpoint)
         
         self.stage_drawer.draw()
-        
+
         if self.world.time == 1:
-            arcade.draw_text(f"PRESS 'R' TO RESTART", 75, 500, arcade.color.WHITE, 60)
+            if self.world.player.life > 0:
+                arcade.draw_text(f"PRESS 'R' TO RESPAWN", 75, 300, arcade.color.WHITE, 60)
+            if self.world.player.life == 0:
+                arcade.draw_text(f"PRESS 'R' TO RESTART", 75, 300, arcade.color.WHITE, 60)
+            
+        arcade.draw_text(f"LIFE: {self.world.player.life}", 25, 550, arcade.color.RED, 30)
+        arcade.draw_text(f"KILL: {self.world.player.kill}", 675, 550, arcade.color.WHITE, 30)
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)

@@ -21,6 +21,8 @@ class Player:
         self.y = y
         self.vx = 0
         self.vy = 0
+        self.life = 3
+        self.kill = 0
 
         self.turn = 0 # 0-right 1-left
         self.jump_status = 0
@@ -100,8 +102,10 @@ class Player:
         block_hit_list = spritecollide(self.x, self.y ,self.height, self.block_size, self.stage.block_list)
         self.move_out_of_block(block_hit_list)
         if self.hit_slime():
+            self.life -= 1
             self.dead()
         if self.y <= -100:
+            self.life -= 1
             self.dead()
             
 
@@ -151,6 +155,7 @@ class Bullet:
         if self.hit_block():
             self.delete()
         if self.hit_slime():
+            self.player.kill += 1
             self.delete()
             
 
@@ -263,7 +268,7 @@ class World:
         self.write_slime()
         self.checkpoint = []
         self.write_checkpoint(1, 500, 80)
-        self.write_checkpoint(2, 580, 120)
+        self.write_checkpoint(3, 620, 280)
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
@@ -284,13 +289,25 @@ class World:
                 self.bullet.append(Bullet(self))
                 
         if self.time == 1:
-            if key == arcade.key.R:
-                self.time = 0
-                self.currentmap = self.spawnpoint[0]
-                self.change_map(MAP[self.currentmap])
-                self.player.x = self.spawnpoint[1]
-                self.player.y = self.spawnpoint[2]
-                
+            if self.player.life != 0:
+                if key == arcade.key.R:
+                    self.time = 0
+                    self.currentmap = self.spawnpoint[0]
+                    self.change_map(MAP[self.currentmap])
+                    self.player.x = self.spawnpoint[1]
+                    self.player.y = self.spawnpoint[2]
+                    self.player.turn = 0
+            else:
+                if key == arcade.key.R:
+                    self.time = 0
+                    self.spawnpoint = [0, 30, 80]
+                    self.currentmap = self.spawnpoint[0]
+                    self.change_map(MAP[self.currentmap])
+                    self.player.x = self.spawnpoint[1]
+                    self.player.y = self.spawnpoint[2]
+                    self.player.turn = 0
+                    self.player.life = 3
+                    self.player.kill = 0
                 
     def on_key_release(self, key, modifiers):
         if len(self.pressing) == 1:
