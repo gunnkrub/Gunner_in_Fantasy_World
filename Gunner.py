@@ -40,11 +40,23 @@ class BulletSprite:
 class SlimeSprite():
     def __init__(self):
         self.sprite = arcade.Sprite('images/Slime.png')
+        self.health_bar = arcade.Sprite('images/Health_bar.png')
+        self.gray_health_bar = arcade.Sprite('images/Gray_Health_bar.png')
 
     def draw(self, slime_list):
         for slime in slime_list:
             self.sprite.set_position(slime.x, slime.y)
+            self.gray_health_bar.set_position(slime.x , slime.y + 35)
+            self.gray_health_bar.draw()
+
+            percent_health = int(((slime.health / slime.MAX_HEALTH) * 100 // 10))
+            for i in range(percent_health):
+                self.health_bar.set_position(slime.x - 13.5 + (i*3), slime.y + 35)
+                self.health_bar.draw()
+            
             self.sprite.draw()
+            
+            
 
 class CheckpointSprite():
     def __init__(self):
@@ -103,12 +115,14 @@ class GunnerWindow(arcade.Window):
 
         if self.world.time == 1:
             if self.world.player.life > 0:
-                arcade.draw_text(f"PRESS 'R' TO RESPAWN", 75, 300, arcade.color.WHITE, 60)
+                arcade.draw_text(f"PRESS 'R' TO RESPAWN", 50, 300, arcade.color.WHITE, 60)
             if self.world.player.life == 0:
-                arcade.draw_text(f"PRESS 'R' TO RESTART", 75, 300, arcade.color.WHITE, 60)
+                arcade.draw_text(f"PRESS 'R' TO RESTART", 50, 300, arcade.color.WHITE, 60)
             
         arcade.draw_text(f"LIFE: {self.world.player.life}", 25, 550, arcade.color.RED, 30)
         arcade.draw_text(f"KILL: {self.world.player.kill}", 675, 550, arcade.color.WHITE, 30)
+
+
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)
@@ -126,7 +140,7 @@ class StageDrawer():
         self.block_sprite = arcade.Sprite('images/Block.png')
         
     def get_sprite_position(self, row, column):
-        # find x,y from column,row
+        # find x,y from column,rowself.health_bar.draw()
         # row = 0-19 column = 0-14
         x = ((column + 1) * BLOCK_SIZE) - BLOCK_SIZE//2
         y = (SCREEN_HEIGHT - ((row + 1) * BLOCK_SIZE)) + BLOCK_SIZE//2

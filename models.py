@@ -81,14 +81,21 @@ class Player:
                 self.world.currentmap = 0
             self.world.change_map(MAP[self.world.currentmap])
             self.x = 0
+
+        if self.world.currentmap == 0:
+            if self.x <= 20:
+                self.x = 20
+
+        else:
+            if self.x < 0:
+                self.world.currentmap -= 1
+                self.turn = 1
+                if self.world.currentmap == -1:
+                    self.world.currentmap = TOTAL_MAP - 1
+                self.world.change_map(MAP[self.world.currentmap])
+                self.x = 800
+
             
-        elif self.x < 0:
-            self.world.currentmap -= 1
-            self.turn = 1
-            if self.world.currentmap == -1:
-                self.world.currentmap = TOTAL_MAP - 1
-            self.world.change_map(MAP[self.world.currentmap])
-            self.x = 800
 
     def update(self, delta):
         self.x += self.vx
@@ -141,7 +148,11 @@ class Bullet:
         for slime in self.world.slime:
             if slime.x - (self.world.block_size / 2) <= self.x + (self.bullet_width / 2) <= slime.x + (self.world.block_size / 2):
                 if slime.y - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= slime.y + (self.world.block_size / 2) or slime.y - (self.world.block_size / 2) <= self.y + (self.bullet_height / 2) <= slime.y + (self.world.block_size / 2):
-                   self.world.slime.remove(slime)
+                   slime.health -= 10
+                   if slime.health == 0:
+                       self.player.kill += 1
+                       self.world.slime.remove(slime)
+
                    return True
         return False
     
@@ -150,12 +161,11 @@ class Bullet:
         
     def update(self, delta):
         self.x += self.vx
-        if self.x > self.world.width + (self.bullet_width / 2) or self.x < -(self.bullet_width / 2):
+        if self.x > self.world.width + 10 or self.x < - 10:
             self.delete()
         if self.hit_block():
             self.delete()
         if self.hit_slime():
-            self.player.kill += 1
             self.delete()
             
 
@@ -171,6 +181,8 @@ class Slime:
         self.y = y
         self.vx = -1.5
         self.vy = 0
+        self.health = 20
+        self.MAX_HEALTH = 20
 
     def move_out_of_block(self, block_hit_list):
         for block_x, block_y in block_hit_list:
