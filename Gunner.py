@@ -156,8 +156,8 @@ class GunnerWindow(arcade.Window):
         arcade.draw_text(f"LIFE: {self.world.player.life}", 25, 550, arcade.color.RED, 30)
         arcade.draw_text(f"SCORE: {self.world.player.kill}", 600, 550, arcade.color.WHITE, 30)
 
-##        if self.world.kingslime.dead():
-##            arcade.draw_text("YOU WON!", 400, 300, arcade.color.YELLOW, 60)
+        if self.world.time == 2:
+            arcade.draw_text("YOU WON!", 75, 300, arcade.color.GOLD, 120)
 
 
 

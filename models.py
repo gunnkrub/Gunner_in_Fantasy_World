@@ -176,6 +176,7 @@ class Bullet:
                 if kingslime.health == 0:
                     self.player.kill += 50
                     self.world.kingslime.remove(kingslime)
+                    self.world.time = 2
                 return True
             
     def delete(self):
