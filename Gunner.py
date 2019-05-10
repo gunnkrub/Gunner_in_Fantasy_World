@@ -39,13 +39,15 @@ class BulletSprite:
 
 class SlimeSprite():
     def __init__(self):
-        self.sprite = arcade.Sprite('images/Slime.png')
+        self.sprite_right = arcade.Sprite('images/Slime_right.png')
+        self.sprite_left = arcade.Sprite('images/Slime_left.png')
         self.health_bar = arcade.Sprite('images/Health_bar.png')
         self.gray_health_bar = arcade.Sprite('images/Gray_Health_bar.png')
 
     def draw(self, slime_list):
         for slime in slime_list:
-            self.sprite.set_position(slime.x, slime.y)
+            self.sprite_left.set_position(slime.x, slime.y)
+            self.sprite_right.set_position(slime.x, slime.y)
             self.gray_health_bar.set_position(slime.x , slime.y + 35)
             self.gray_health_bar.draw()
 
@@ -53,8 +55,37 @@ class SlimeSprite():
             for i in range(percent_health):
                 self.health_bar.set_position(slime.x - 13.5 + (i*3), slime.y + 35)
                 self.health_bar.draw()
+
+            if slime.vx >= 0:
+                self.sprite_right.draw()
+            else:
+                self.sprite_left.draw()
             
-            self.sprite.draw()
+
+class KingslimeSprite():
+     def __init__(self):
+        self.sprite_right = arcade.Sprite('images/Slime_right.png', scale = 4)
+        self.sprite_left = arcade.Sprite('images/Slime_left.png', scale = 4)
+        self.health_bar = arcade.Sprite('images/Boss_Health_bar.png')
+        self.gray_health_bar = arcade.Sprite('images/Boss_Gray_Health_bar.png')
+
+     def draw(self, kingslime_list):
+        for kingslime in kingslime_list:
+            self.sprite_right.set_position(kingslime.x, kingslime.y)
+            self.sprite_left.set_position(kingslime.x, kingslime.y)
+            self.gray_health_bar.set_position(400 , 550)
+            self.gray_health_bar.draw()
+            
+            percent_health = int(((kingslime.health / kingslime.MAX_HEALTH) * 100 // 10))
+            for i in range(percent_health):
+                self.health_bar.set_position(400 - 135 + (i*30), 550)
+                self.health_bar.draw()
+
+            if kingslime.vx >= 0:
+                self.sprite_right.draw()
+            else:
+                self.sprite_left.draw()
+
             
             
 
@@ -66,6 +97,7 @@ class CheckpointSprite():
         for checkpoint in checkpoint_list:
             self.sprite.set_position(checkpoint.x, checkpoint.y)
             self.sprite.draw()
+
         
             
 class GunnerWindow(arcade.Window):
@@ -80,6 +112,7 @@ class GunnerWindow(arcade.Window):
         self.player_left_sprite = ModelSprite('images/Gunner_left.png', model=self.world.player)
         self.bullet_sprite = BulletSprite()
         self.slime_sprite = SlimeSprite()
+        self.kingslime_sprite = KingslimeSprite()
         self.checkpoint_sprite = CheckpointSprite()
         
 ##        if self.world.currentmap == 0:
@@ -108,6 +141,7 @@ class GunnerWindow(arcade.Window):
             self.player_left_sprite.draw()
         
         self.slime_sprite.draw(self.world.slime)
+        self.kingslime_sprite.draw(self.world.kingslime)
         self.bullet_sprite.draw(self.world.bullet)
         self.checkpoint_sprite.draw(self.world.checkpoint)
         
@@ -120,7 +154,11 @@ class GunnerWindow(arcade.Window):
                 arcade.draw_text(f"PRESS 'R' TO RESTART", 50, 300, arcade.color.WHITE, 60)
             
         arcade.draw_text(f"LIFE: {self.world.player.life}", 25, 550, arcade.color.RED, 30)
-        arcade.draw_text(f"KILL: {self.world.player.kill}", 675, 550, arcade.color.WHITE, 30)
+        arcade.draw_text(f"SCORE: {self.world.player.kill}", 600, 550, arcade.color.WHITE, 30)
+
+##        if self.world.kingslime.dead():
+##            arcade.draw_text("YOU WON!", 400, 300, arcade.color.YELLOW, 60)
+
 
 
 
