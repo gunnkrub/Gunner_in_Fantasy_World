@@ -215,6 +215,60 @@ class Slime:
         self.world.slime.remove(self)
 
 
+class Kingslime:
+    def __init__(self, world, x, y, block_size):
+        self.world = world
+        self.player = self.world.player
+        self.stage = self.world.stage
+        self.block_size = block_size
+        self.width = 160
+        self.height = 160
+        self.x = x
+        self.y = y
+        self.vx = 5
+        self.vy = 0
+        self.health = 500
+        self.MAX_HEALTH = 500
+        self.timer = 0
+
+    def move_out_of_block(self, block_hit_list):
+        if self.x - (self.width // 2) <= 0:
+            self.x = self.width
+            
+        if self.x + (self.width // 2) >= 800:
+            self.x = 800 - self.width
+            
+        for block_x, block_y in block_hit_list:
+            if self.y > block_y:
+                if self.vy < 0:
+                    self.y = block_y + (self.block_size) + self.height
+                    self.vy = 0
+
+    def jump(self):
+        JUMPING_VELOCITY = 20
+        self.vy = JUMPING_VELOCITY
+
+    def update(self, delta):
+        DELAY = 30
+        if self.timer != DELAY:
+            self.timer += 1
+        else:
+            self.timer = 0
+            self.jump()
+        if self.player.x < self.x:
+            self.x -= self.vx
+        else:
+            self.x += self.vx
+        self.y += self.vy
+        self.vy -= GRAVITY
+        
+        block_hit_list = spritecollide(self.x, self.y ,self.height, self.block_size, self.stage.block_list)
+        self.move_out_of_block(block_hit_list)
+
+    def delete(self):
+        self.world.kingslime.remove(self)
+
+
 class Checkpoint:
     def __init__(self, world, Map, x, y):
         self.world = world
@@ -281,6 +335,8 @@ class World:
         self.checkpoint = []
         self.write_checkpoint(1, 500, 80)
         self.write_checkpoint(3, 620, 280)
+        if self.currentmap == 4: 
+            self.kingslime = Kingslime(700, 200, self.block_size)
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.W:
